@@ -28,7 +28,7 @@ fora do topo. Total: ~1,5 MB.
 |---|---|
 | Noivos + Kombi | topo, seção "Quem somos", galeria |
 | Kombi montada no gramado | card Kombi Retrô, galeria |
-| Totem Retrô | topo, card Totem Retrô, galeria |
+| Totem Retrô | card Totem Retrô, galeria; e no topo, montado lado a lado com o Moderno |
 | Totem Moderno | card Totem Moderno, galeria |
 | Pai e filha / casal com props / casal | tirinha do topo, galeria |
 
