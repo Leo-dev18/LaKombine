@@ -10,58 +10,41 @@ totem moderno para casamentos, festas e eventos corporativos.
 
 ## O que precisa ser trocado antes de divulgar
 
-Três coisas ficaram com valor provisório. Todas estão marcadas com `TROCAR` no código.
+WhatsApp e fotos já aplicados. Falta a revisão dos depoimentos e das afirmações.
 
-### 1. Número do WhatsApp — **obrigatório**
+### 1. ~~Número do WhatsApp~~ ✅ feito
 
-O placeholder é `5511900000000` (formato: `55` + DDD + número, sem espaços ou traços).
-Aparece em **2 links** no `index.html`:
+O número real (`+55 11 91526-9335` → `5511915269335`) já está nos 3 lugares:
+os dois links `wa.me` e o campo `telephone` do JSON-LD. Se mudar de número,
+troque nos três — um `sed 's/5511915269335/NOVO/g' index.html` resolve.
 
-```bash
-# troque em todos de uma vez:
-sed -i 's/5511900000000/55SEUNUMERO/g' index.html
-```
+### 2. ~~Fotos~~ ✅ feito (com ressalvas)
 
-| Onde | Trecho |
+As 16 imagens do site vêm de 7 fotos originais, recortadas para cada proporção.
+Todas têm `alt` descritivo, `width`/`height` (evita salto de layout) e `loading="lazy"`
+fora do topo. Total: ~1,5 MB.
+
+| Original | Onde aparece |
 |---|---|
-| Botão principal do CTA final | `href="https://wa.me/5511900000000?text=..."` |
-| Rodapé → Contato | `href="https://wa.me/5511900000000"` |
+| Noivos + Kombi | topo, seção "Quem somos", galeria |
+| Kombi montada no gramado | card Kombi Retrô, galeria |
+| Totem Retrô | topo, card Totem Retrô, galeria |
+| Totem Moderno | card Totem Moderno, galeria |
+| Pai e filha / casal com props / casal | tirinha do topo, galeria |
 
-Os demais botões (“Solicitar orçamento”, “Quero a Kombi…”) apontam para `#contato`,
-então rolam até o CTA e usam o mesmo link — não precisa mexer neles.
+**O que ainda falta:**
 
-### 2. Fotos
+1. **Interior da Kombi com a câmera montada.** O texto do site fala disso em três
+   lugares e não existe foto. É a maior lacuna que sobrou.
+2. **Kombi em mais eventos.** Hoje ela aparece 3× a partir de 2 fotos.
+3. **Tirinha impressa na mão de alguém** — prova concreta da entrega.
+4. **Livro de assinaturas.**
+5. A foto da Kombi no gramado é a de menor resolução (659 px de largura). Funciona,
+   mas fica levemente macia em tela retina. Se tiver o original maior, vale trocar.
 
-Todo espaço de imagem é um `<div class="ph" data-slot="assets/nome.jpg">`.
-O atributo `data-slot` diz **qual arquivo aquele espaço espera**. Para publicar uma foto real,
-troque a `div` inteira por uma `img`:
-
-```html
-<!-- antes -->
-<div class="ph" data-slot="assets/exp-kombi.jpg" data-label="Kombi Retrô"></div>
-
-<!-- depois -->
-<img src="assets/exp-kombi.jpg" alt="Kombi retrô montada em um casamento ao ar livre" loading="lazy" />
-```
-
-Arquivos esperados (coloque em `assets/`):
-
-| Arquivo | Onde aparece | Proporção sugerida |
-|---|---|---|
-| `kombi-01.jpg` | polaroid do topo | 4:3 |
-| `tirinha-01..03.jpg` | tirinha de fotos do topo | 4:3 (recorte quadrado funciona) |
-| `totem-01.jpg` | segunda polaroid do topo | 4:3 |
-| `sobre-kombi.jpg` | seção “Quem somos” | 4:5 (retrato) |
-| `exp-kombi.jpg` | card Kombi Retrô | 16:11 |
-| `exp-totem-retro.jpg` | card Totem Retrô | 16:11 |
-| `exp-totem-moderno.jpg` | card Totem Moderno | 16:11 |
-| `galeria-01..08.jpg` | galeria horizontal | alterna 4:3 e 3:4 |
-
-Sempre preencha o `alt` descrevendo a cena — é o que leitores de tela leem e o que o
-Google usa para indexar as imagens.
-
-**Dica de peso:** exporte em no máximo ~1600px de largura e qualidade 80. Fotos direto
-do celular têm 4–8 MB e deixam o site lento no 4G dos convidados.
+Para trocar ou acrescentar: coloque o arquivo em `assets/` e ajuste o `src` da `<img>`
+correspondente. O `object-fit: cover` no CSS garante o enquadramento mesmo que a
+proporção da foto nova seja diferente.
 
 ### 3. Depoimentos
 
@@ -72,6 +55,22 @@ converte muito mais. O bloco está marcado com um comentário `ATENÇÃO` no `in
 
 O mesmo vale para os números do hero (5,0 · 9 avaliações · 100% recomendam · Casamentos
 Awards 2026): confira se continuam corretos antes de publicar.
+
+### 4. Afirmações que precisam de confirmação sua
+
+Tudo abaixo veio do perfil público da marca, não de você. Confirme antes de divulgar:
+
+| Onde | Afirmação |
+|---|---|
+| Hero | 5,0 · 9 avaliações · 100% dos casais recomendam |
+| Depoimentos | Casamentos Awards 2026 |
+| FAQ | montagem em ~60 min · 3 a 6 h de duração · reservar com 3 meses |
+| FAQ | pagamento: transferência, PIX, cartão, parcelado |
+| FAQ | funciona ao ar livre |
+| Rodapé / FAQ | base em Guarulhos, atende a Grande São Paulo |
+
+O rodapé **não** exibe horário de atendimento — eu não tenho esse dado. Se quiser mostrar,
+há um comentário no `index.html` marcando o lugar.
 
 ---
 
@@ -132,7 +131,9 @@ Auto-hospedada em `assets/fonts/` (SIL Open Font License). Nada é buscado no Go
 
 - **Poppins** — títulos e interface
 - **Inter** — texto corrido
-- **Yellowtail** — os detalhes em manuscrito, ecoando o “Kombine” da logo
+- **Sacramento** — os detalhes em manuscrito. Traço monolinear fino, com altura-x
+  de 0,270 do corpo: por isso roda a `1.92em`, calculado para bater opticamente
+  com a Poppins ao lado. A descendente longa (0,53em) exige a classe `.h2--script`
 
 ## Acessibilidade
 
@@ -167,22 +168,34 @@ deste repositório é o que informa isso ao GitHub Pages.
 
 ### DNS no Registro.br
 
-No painel do Registro.br → **Editar zona DNS**:
+No painel do Registro.br → **Configurar endereçamento** → **Modo avançado**.
 
-| Tipo | Nome | Valor |
+> O painel do Registro.br **não aceita `@`** nem campo vazio: o campo NOME leva o nome
+> completo, como nos exemplos da própria tela (`meudominio.com.br A 200.160.10.251`).
+> E o CNAME vai **sem ponto final**.
+
+| TIPO | NOME | DADOS |
 |---|---|---|
-| A | `@` | `185.199.108.153` |
-| A | `@` | `185.199.109.153` |
-| A | `@` | `185.199.110.153` |
-| A | `@` | `185.199.111.153` |
-| AAAA | `@` | `2606:50c0:8000::153` |
-| AAAA | `@` | `2606:50c0:8001::153` |
-| AAAA | `@` | `2606:50c0:8002::153` |
-| AAAA | `@` | `2606:50c0:8003::153` |
-| CNAME | `www` | `leo-dev18.github.io.` |
+| A | `lakombine.com.br` | `185.199.108.153` |
+| A | `lakombine.com.br` | `185.199.109.153` |
+| A | `lakombine.com.br` | `185.199.110.153` |
+| A | `lakombine.com.br` | `185.199.111.153` |
+| AAAA | `lakombine.com.br` | `2606:50c0:8000::153` |
+| AAAA | `lakombine.com.br` | `2606:50c0:8001::153` |
+| AAAA | `lakombine.com.br` | `2606:50c0:8002::153` |
+| AAAA | `lakombine.com.br` | `2606:50c0:8003::153` |
+| CNAME | `www.lakombine.com.br` | `leo-dev18.github.io` |
+
+São 9 registros, dentro do limite de 40 do modo avançado. O `www` **precisa** ser CNAME
+com nome preenchido: o protocolo DNS proíbe CNAME na raiz, porque lá já existem SOA e NS.
+É exatamente por isso que o GitHub pede A/AAAA no apex e CNAME só no `www`.
 
 Configurando apex e `www` juntos, o GitHub cria o redirecionamento entre os dois
 automaticamente.
+
+**Ordem importa:** configure o DNS **antes** de ativar o Pages. Com o `CNAME` já no repo,
+o GitHub adota o domínio assim que o Pages sobe — e aí `leo-dev18.github.io/LaKombine/`
+passa a redirecionar para um domínio que ainda não resolve.
 
 ### No GitHub
 
