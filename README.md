@@ -84,7 +84,9 @@ LaKombine/
 │   └── main.css            # design system + todas as seções
 ├── scripts/main.js         # nav mobile, reveals, contadores, FAQ, galeria
 ├── assets/
-│   ├── logo.png            # logo original
+│   ├── logo-branco.png     # logo horizontal branca (nav sobre verde, rodapé)
+│   ├── logo-verde.png      # logo horizontal verde (nav creme, ao rolar)
+│   ├── logo.png            # logo circular original (og-image e JSON-LD)
 │   ├── favicon.svg         # ícone da aba
 │   ├── apple-touch-icon.png
 │   ├── og-image.png        # preview no WhatsApp/Instagram/Facebook
@@ -128,6 +130,11 @@ Extraída direto do gradiente da logo:
 ## Tipografia
 
 Auto-hospedada em `assets/fonts/` (SIL Open Font License). Nada é buscado no Google.
+
+> **Logo:** o header troca a versão branca pela verde conforme o fundo da nav.
+> As duas foram recortadas na **mesma caixa** (a união dos dois bounding boxes),
+> por isso a arte não se desloca durante a transição. Repare que as tags
+> diferem: a branca diz "Foto lembrança" e a verde "Cabine de Fotos".
 
 - **Poppins** — títulos e interface
 - **Inter** — texto corrido

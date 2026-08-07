@@ -238,13 +238,25 @@ ul, ol { list-style: none; padding: 0; }
   box-shadow: 0 1px 0 rgba(20, 49, 44, .08), var(--shadow-sm);
 }
 
-.brand { display: flex; align-items: center; gap: .7rem; text-decoration: none; }
-.brand__mark {
-  width: 54px; height: 54px; border-radius: 50%;
-  box-shadow: 0 0 0 2px rgba(255,255,255,.6);
-  transition: transform .3s var(--ease);
+/* Duas versoes da logo empilhadas no mesmo espaco: a que aparece depende
+   do fundo da nav. Sobrepostas em vez de trocadas por `src` para nao
+   piscar nem deslocar o layout. Ambas tem a mesma caixa, entao a arte
+   fica no lugar durante a transicao. */
+.brand {
+  position: relative;
+  display: block;
+  line-height: 0;
+  text-decoration: none;
 }
-.brand:hover .brand__mark { transform: scale(1.06); }
+.brand__mark {
+  height: 46px;
+  width: auto;
+  transition: opacity .3s var(--ease), transform .3s var(--ease);
+}
+.brand__mark--escura { position: absolute; top: 0; left: 0; opacity: 0; }
+.nav.is-stuck .brand__mark--clara  { opacity: 0; }
+.nav.is-stuck .brand__mark--escura { opacity: 1; }
+.brand:hover .brand__mark { transform: scale(1.04); }
 
 .nav__links { display: flex; align-items: center; gap: 1.7rem; }
 .nav__links a {
@@ -780,7 +792,7 @@ ul, ol { list-style: none; padding: 0; }
   grid-template-columns: 1.6fr repeat(3, 1fr);
   gap: 2.5rem;
 }
-.footer__brand img { border-radius: 50%; margin-bottom: 1rem; }
+.footer__brand .footer__logo { height: 54px; width: auto; margin-bottom: 1rem; }
 .footer__brand p { font-size: .92rem; max-width: 34ch; }
 .footer__col { display: flex; flex-direction: column; gap: .6rem; }
 .footer__col h3 {
@@ -850,6 +862,8 @@ ul, ol { list-style: none; padding: 0; }
     text-align: center; margin-top: 1rem; border-bottom: 0 !important;
   }
   .nav.is-open { background: rgba(251,245,233,.96); backdrop-filter: blur(12px); }
+  .nav.is-open .brand__mark--clara  { opacity: 0; }
+  .nav.is-open .brand__mark--escura { opacity: 1; }
   .nav__toggle { display: flex; }
 }
 
