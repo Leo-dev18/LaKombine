@@ -308,8 +308,11 @@ ul, ol { list-style: none; padding: 0; }
   display: flex;
   flex-direction: column;
   justify-content: center;
-  min-height: min(92vh, 820px);
-  padding-top: calc(var(--nav-h) + 3rem);
+  /* svh, nao vh: no celular o vh conta a barra do navegador que some ao
+     rolar, e o topo estouraria a tela. Os 92% deixam uma fatia da proxima
+     secao aparecendo, sinalizando que ha mais conteudo abaixo. */
+  min-height: 92svh;
+  padding-top: var(--nav-h);
   padding-bottom: 0;
   background: var(--surface-3);
   color: var(--white);
@@ -360,7 +363,7 @@ ul, ol { list-style: none; padding: 0; }
 .hero__inner {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
-  padding-block: 3rem 5rem;
+  padding-block: clamp(1rem, 3vh, 2.25rem) clamp(1.25rem, 4vh, 3rem);
 }
 /* Coluna mais estreita que antes (era 46rem): o titulo agora quebra em
    3 linhas dentro dela, o que deixa o casal visivel a direita do texto
@@ -371,16 +374,18 @@ ul, ol { list-style: none; padding: 0; }
 .hero__title {
   font-family: var(--font-display);
   font-weight: 800;
-  font-size: clamp(2.35rem, 1.1rem + 4.6vw, 4.25rem);
+  /* o min() limita pela altura tambem: em notebook de 768px o titulo
+      grande sozinho comia 240px e empurrava o resto para fora da tela */
+  font-size: clamp(2rem, min(1rem + 4.2vw, 6.6vh), 4rem);
   line-height: 1.05;
   letter-spacing: -.03em;
   text-wrap: balance;
 }
 .hero__lead {
-  margin-top: 1.5rem;
+  margin-top: clamp(.9rem, 2.2vh, 1.5rem);
   display: grid;
-  gap: .85rem;
-  font-size: clamp(1rem, .95rem + .3vw, 1.15rem);
+  gap: clamp(.5rem, 1.4vh, .85rem);
+  font-size: clamp(.97rem, min(.95rem + .3vw, 2vh), 1.15rem);
   color: rgba(255,255,255,.96);
   max-width: 52ch;
 }
@@ -392,8 +397,11 @@ ul, ol { list-style: none; padding: 0; }
   display: grid;
   grid-template-columns: repeat(4, auto);
   gap: 1.6rem;
-  margin-top: 3rem;
-  padding-top: 1.9rem;
+  /* mais largo que a coluna de texto para caber em uma linha so, mas nao
+     tao largo a ponto de invadir a area onde o casal aparece */
+  max-width: 42rem;
+  margin-top: clamp(1.1rem, 3vh, 2.5rem);
+  padding-top: clamp(.85rem, 2vh, 1.6rem);
   border-top: 1px dashed rgba(255,255,255,.35);
 }
 .hero__stats li { display: flex; flex-direction: column; gap: .15rem; }
@@ -626,25 +634,30 @@ ul, ol { list-style: none; padding: 0; }
   padding: .5rem clamp(1.25rem, 4vw, 4rem) 1.5rem;
   scroll-snap-type: x mandatory;
   -webkit-overflow-scrolling: touch;
-  scrollbar-width: thin;
-  scrollbar-color: var(--teal-300) transparent;
   cursor: grab;
+  /* barra escondida: a rolagem continua funcionando por toque, arrasto e
+     roda do mouse, e o texto "Arraste para o lado" ja sinaliza a interacao */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
+.gallery::-webkit-scrollbar { display: none; }
 .gallery.is-dragging { cursor: grabbing; scroll-snap-type: none; }
-.gallery::-webkit-scrollbar { height: 8px; }
-.gallery::-webkit-scrollbar-thumb { background: var(--teal-300); border-radius: 999px; }
-.gallery::-webkit-scrollbar-track { background: rgba(20,49,44,.06); border-radius: 999px; }
 
 .gallery__item {
   flex: 0 0 auto;
   width: clamp(210px, 24vw, 290px);
   scroll-snap-align: center;
   background: var(--white);
-  padding: .6rem .6rem .9rem;
+  /* borda igual nos quatro lados. Antes a de baixo era maior (.9rem), o que
+     imitava polaroid, mas deixava o conjunto irregular entre as fotos. */
+  padding: .6rem;
   border-radius: 4px;
   box-shadow: var(--shadow);
   transition: transform .35s var(--ease);
 }
+/* as deitadas ficam mais largas: com a mesma largura das em pe, elas
+   apareciam bem menores e o carrossel ficava desequilibrado */
+.gallery__item:not(.gallery__item--tall) { width: clamp(270px, 31vw, 385px); }
 .gallery__item:nth-child(odd)  { rotate: -1.6deg; }
 .gallery__item:nth-child(even) { rotate: 1.4deg; }
 .gallery__item:hover { rotate: 0deg; transform: translateY(-6px); }
@@ -804,7 +817,7 @@ ul, ol { list-style: none; padding: 0; }
   /* A foto nao ocupa a altura toda do topo. Esticada por ~900px, so o terco
      de cima dela aparecia — palmeiras, nao os noivos. Limitando a faixa, a
      imagem inteira cabe nela e o degrade dissolve o resto no verde. */
-  .hero__foto { height: 54%; }
+  .hero__foto { height: 60%; }
   .hero__foto img { object-position: 50% 46%; }
 
   /* aqui o degradê é vertical: a foto fica no topo e some no verde antes do
@@ -816,7 +829,12 @@ ul, ol { list-style: none; padding: 0; }
       var(--surface-3) 60%,
       var(--surface-3) 100%);
   }
-  .hero__inner { padding-top: 10rem; padding-bottom: 3.5rem; }
+  .hero__inner { padding-top: clamp(5rem, 11vh, 9rem); padding-bottom: clamp(1.25rem, 2.5vh, 3rem); }
+  /* entrelinha e espacamentos mais justos: sem isso o topo nao cabe em
+     tela de 844px, que e a altura do iPhone 14/15 */
+  .hero__lead { line-height: 1.5; }
+  .eyebrow--light { margin-bottom: .6rem; }
+  .hero__stats { gap: 1rem 1.4rem; }
   .hero__stats { grid-template-columns: repeat(2, 1fr); gap: 1.4rem; }
   .about { grid-template-columns: 1fr; }
   .about__media { max-width: 460px; }
@@ -853,6 +871,16 @@ ul, ol { list-style: none; padding: 0; }
   .nav.is-open .brand__mark--clara  { opacity: 0; }
   .nav.is-open .brand__mark--escura { opacity: 1; }
   .nav__toggle { display: flex; }}
+
+/* Telas estreitas: aperta o conjunto do topo para caber na janela.
+   O chapeu quebrava em 3 linhas a 360px; com menos espacamento cabe em 2. */
+@media (max-width: 400px) {
+  .hero .eyebrow--light { letter-spacing: .09em; font-size: .7rem; }
+  .hero__inner { padding-top: clamp(4.25rem, 9vh, 8rem); }
+  .hero__lead { font-size: .93rem; line-height: 1.45; }
+  .hero__stats { gap: .7rem 1.1rem; }
+  .hero__stats span { font-size: .7rem; }
+}
 
 @media (max-width: 640px) {
   .eyebrow { letter-spacing: .13em; }

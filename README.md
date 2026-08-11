@@ -95,7 +95,7 @@ LaKombine/
 └── README.md
 ```
 
-Seções, na ordem: Hero → Marquee → Sobre → Experiências → Como funciona → Galeria →
+Seções, na ordem: Hero → Marquee → Sobre → Opções → Como funciona → Galeria →
 Depoimentos → FAQ → CTA final → Rodapé.
 
 ## Stack
