@@ -150,11 +150,6 @@ ul, ol { list-style: none; padding: 0; }
   margin-bottom: 1rem;
 }
 .eyebrow--light { color: var(--on-dark); }
-.eyebrow .dot {
-  width: 7px; height: 7px; border-radius: 50%;
-  background: var(--amber);
-  box-shadow: 0 0 0 4px rgba(227, 164, 79, .25);
-}
 
 .section__sub {
   margin-top: .9rem;
@@ -232,6 +227,19 @@ ul, ol { list-style: none; padding: 0; }
   margin-inline: auto;
   display: flex; align-items: center; justify-content: space-between; gap: 1rem;
 }
+.nav__backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 90;                 /* abaixo da barra (100), acima da pagina */
+  background: rgba(16, 40, 36, .5);
+  -webkit-backdrop-filter: blur(7px);
+  backdrop-filter: blur(7px);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .32s var(--ease);
+}
+.nav.is-open ~ .nav__backdrop { opacity: 1; pointer-events: auto; }
+
 .nav.is-stuck {
   background: rgba(251, 245, 233, .92);
   backdrop-filter: blur(12px);
@@ -807,12 +815,11 @@ ul, ol { list-style: none; padding: 0; }
 
 .footer__bottom {
   display: flex; flex-wrap: wrap; gap: .6rem;
-  justify-content: space-between; align-items: center;
+  align-items: center;
   margin-top: 3rem; padding-top: 1.5rem;
   border-top: 1px solid rgba(255,255,255,.12);
   font-size: .82rem; color: rgba(255,255,255,.7);
 }
-.footer__made span { color: var(--amber); }
 
 /* =========================================================
    REVEAL
@@ -870,8 +877,30 @@ ul, ol { list-style: none; padding: 0; }
 @media (max-width: 640px) {
   .eyebrow { letter-spacing: .13em; }
   .rays--hero { width: 110px; top: 8%; right: 2%; }
-  .hero__media { grid-template-columns: 1fr 1fr; gap: .8rem; }
-  .hero__media .polaroid--b { max-width: 100%; }
+
+  /* No desktop a tirinha fica em pe na coluna da direita. No celular ela
+     ficaria 2,5x mais alta que as duas polaroids empilhadas, esticando as
+     linhas do grid e deixando um vazio entre elas. Aqui ela deita: as duas
+     polaroids ocupam a primeira linha e a tirinha atravessa a segunda. */
+  .hero__media {
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto auto;
+    gap: .7rem;
+    align-items: start;
+  }
+  .polaroid--a { grid-column: 1; grid-row: 1; transform: rotate(-2.5deg); }
+  .polaroid--b { grid-column: 2; grid-row: 1; transform: rotate(2deg); }
+  .strip {
+    grid-column: 1 / -1; grid-row: 2;
+    grid-auto-flow: column;
+    grid-auto-columns: 1fr;
+    align-self: auto;
+    transform: rotate(-1.5deg);
+    margin-top: .3rem;
+  }
+  .polaroid--a:hover { transform: rotate(-2.5deg); }
+  .polaroid--b:hover { transform: rotate(2deg); }
+  .strip:hover { transform: rotate(-1.5deg); }
   .hero__stats { padding-top: 1.5rem; margin-top: 2.2rem; }
   .badge-ring { width: 100px; height: 100px; right: -10px; bottom: -18px; }
   .footer__inner { grid-template-columns: 1fr; }

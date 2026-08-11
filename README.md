@@ -132,9 +132,8 @@ Extraída direto do gradiente da logo:
 Auto-hospedada em `assets/fonts/` (SIL Open Font License). Nada é buscado no Google.
 
 > **Logo:** o header troca a versão branca pela verde conforme o fundo da nav.
-> As duas foram recortadas na **mesma caixa** (a união dos dois bounding boxes),
-> por isso a arte não se desloca durante a transição. Repare que as tags
-> diferem: a branca diz "Foto lembrança" e a verde "Cabine de Fotos".
+> As duas foram recortadas na mesma caixa, por isso a arte não se desloca
+> durante a transição.
 
 - **Poppins** — títulos e interface
 - **Inter** — texto corrido

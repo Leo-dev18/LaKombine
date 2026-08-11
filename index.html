@@ -127,6 +127,12 @@
   </div>
 </header>
 
+<!-- Escurece e desfoca a pagina atras do menu aberto no celular. Precisa ficar
+     FORA do <header>: a nav usa backdrop-filter, e isso cria bloco de contencao
+     para descendentes `position: fixed`, o que prendia este elemento aos 74px
+     da barra. Clicar nele fecha o menu. -->
+<div class="nav__backdrop" id="nav-backdrop" aria-hidden="true"></div>
+
 <main id="conteudo">
 
 <!-- ============ HERO ============ -->
@@ -145,7 +151,7 @@
   <div class="hero__inner container">
     <div class="hero__copy">
       <p class="eyebrow eyebrow--light">
-        <span class="dot"></span> <span>Cabine e totens fotográficos&nbsp;·</span> <span>Guarulhos, Grande&nbsp;SP, interior e litoral</span>
+        <span>Cabine e totens fotográficos&nbsp;·</span> <span>Guarulhos, Grande&nbsp;SP, interior e litoral</span>
       </p>
 
       <h1 class="hero__title has-script">
@@ -573,7 +579,6 @@
 
   <div class="container footer__bottom">
     <p>© <span id="ano">2026</span> La Kombine. Todos os direitos reservados.</p>
-    <p class="footer__made">Feito com <span aria-hidden="true">✷</span> para quem gosta de guardar lembrança</p>
   </div>
 </footer>
 

@@ -46,6 +46,10 @@
       if (e.target.closest('a')) closeMenu();
     });
 
+    // tocar fora do menu tambem fecha
+    var backdrop = document.getElementById('nav-backdrop');
+    if (backdrop) backdrop.addEventListener('click', closeMenu);
+
     document.addEventListener('keydown', function (e) {
       if (e.key === 'Escape' && nav.classList.contains('is-open')) {
         closeMenu();
