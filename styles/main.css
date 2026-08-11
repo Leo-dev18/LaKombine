@@ -305,33 +305,62 @@ ul, ol { list-style: none; padding: 0; }
    ========================================================= */
 .hero {
   position: relative;
-  padding-top: calc(var(--nav-h) + 3.5rem);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: min(92vh, 820px);
+  padding-top: calc(var(--nav-h) + 3rem);
   padding-bottom: 0;
-  background: linear-gradient(142deg, var(--surface-1) 0%, var(--surface-2) 45%, var(--surface-3) 100%);
+  background: var(--surface-3);
   color: var(--white);
   overflow: hidden;
   isolation: isolate;
+}
+
+/* --- foto sangrando --- */
+.hero__foto { position: absolute; inset: 0; z-index: -3; }
+.hero__foto picture { display: contents; }
+.hero__foto img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  object-position: 30% 44%;
+}
+
+/* Dois degradês sobrepostos. O horizontal deixa a esquerda opaca, onde fica
+   o texto — é ele que garante o contraste AA sobre uma foto clara. O vertical
+   escurece o topo (a nav vive ali) e fecha na cor do marquee embaixo. */
+.hero__scrim {
+  position: absolute; inset: 0; z-index: -2;
+  background:
+    linear-gradient(96deg,
+      var(--surface-3) 0%,
+      rgba(28, 66, 60, .98) 40%,
+      rgba(32, 74, 67, .90) 56%,
+      rgba(40, 90, 82, .55) 72%,
+      rgba(49, 106, 96, .18) 88%,
+      rgba(49, 106, 96, .06) 100%),
+    linear-gradient(to bottom,
+      rgba(20, 49, 44, .55) 0%,
+      rgba(20, 49, 44, 0) 28%,
+      rgba(20, 49, 44, 0) 62%,
+      rgba(27, 64, 58, .88) 100%);
 }
 .hero::after { /* grão de filme */
   content: ''; position: absolute; inset: 0; z-index: -1; pointer-events: none;
   opacity: .16; mix-blend-mode: overlay;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
-.hero__bg { position: absolute; inset: 0; z-index: -2; pointer-events: none; }
-.blob { position: absolute; border-radius: 50%; filter: blur(80px); opacity: .38; }
-.blob--1 { width: 46vw; height: 46vw; background: var(--teal-900); top: -16vw; right: -12vw; }
-.blob--2 { width: 38vw; height: 38vw; background: var(--teal-900); bottom: -16vw; left: -12vw; opacity: .34; }
 
 .rays { position: absolute; color: rgba(255,255,255,.35); }
 .rays--hero { width: 190px; top: 16%; right: 4%; transform: rotate(12deg); }
 
 .hero__inner {
   display: grid;
-  grid-template-columns: 1.05fr .95fr;
-  gap: 3.5rem;
-  align-items: center;
-  padding-bottom: 5rem;
+  grid-template-columns: minmax(0, 1fr);
+  padding-block: 3rem 5rem;
 }
+.hero__copy { max-width: 46rem; }
+.hero__lead { max-width: 40rem; }
 
 .hero__title {
   font-family: var(--font-display);
@@ -373,82 +402,15 @@ ul, ol { list-style: none; padding: 0; }
   color: var(--white); text-transform: uppercase;
 }
 
-/* --- mídia do hero: polaroids + tirinha --- */
-.hero__media {
-  position: relative;
-  display: grid;
-  grid-template-columns: 1.1fr .9fr;
-  grid-template-rows: auto auto;
-  gap: 1.2rem 1.1rem;
-  align-items: start;
-}
-.polaroid, .strip {
-  background: var(--white);
-  padding: .7rem .7rem 1.5rem;
-  border-radius: 4px;
-  box-shadow: var(--shadow-lg);
-  transition: transform .4s var(--ease);
-}
-.polaroid { position: relative; }
-.polaroid--a { grid-column: 1; grid-row: 1; transform: rotate(-4deg); }
-.polaroid--b { grid-column: 1; grid-row: 2; transform: rotate(3deg); }
-.polaroid--a:hover { transform: rotate(-1deg) translateY(-6px); }
-.polaroid--b:hover { transform: rotate(1deg) translateY(-6px); }
-
-/* tirinha ocupa a coluna da direita, atravessando as duas linhas */
-.strip {
-  position: relative;
-  grid-column: 2; grid-row: 1 / span 2;
-  align-self: center;
-  display: grid; gap: .4rem;
-  padding: .5rem .5rem 1.3rem;
-  transform: rotate(2.5deg);
-}
-.strip:hover { transform: rotate(0deg) translateY(-6px); }
-
-/* --- placeholders de imagem --- */
-.ph {
-  position: relative;
-  aspect-ratio: 4 / 3;
-  border-radius: 3px;
-  background:
-    repeating-linear-gradient(45deg,
-      rgba(78,148,136,.13) 0 10px,
-      rgba(78,148,136,.06) 10px 20px),
-    var(--teal-50);
-  display: grid; place-items: center;
-  overflow: hidden;
-}
-.ph::before {
-  content: '';
-  width: 46px; height: 38px;
-  opacity: .55;
-  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 40'%3E%3Cg fill='none' stroke='%234E9488' stroke-width='2.2' stroke-linejoin='round'%3E%3Crect x='3' y='11' width='42' height='26' rx='4'/%3E%3Cpath d='M17 11l2.6-5h8.8l2.6 5'/%3E%3Ccircle cx='24' cy='24' r='7.5'/%3E%3Ccircle cx='38' cy='17' r='1.5' fill='%234E9488' stroke='none'/%3E%3C/g%3E%3C/svg%3E") center / contain no-repeat;
-}
-.ph::after {
-  content: attr(data-label);
-  position: absolute; bottom: 8px; left: 0; right: 0;
-  text-align: center;
-  font-family: var(--font-display); font-size: .68rem; font-weight: 600;
-  letter-spacing: .1em; text-transform: uppercase;
-  color: var(--teal-700); opacity: .9;
-}
-.ph--sm { aspect-ratio: 4 / 3.2; }
-.ph--sm::before { width: 28px; height: 23px; }
-.ph--sm::after { display: none; }
-.ph--tall { aspect-ratio: 4 / 5; }
-
 /* ---------- Fotos ---------- */
 /* Os width/height no HTML evitam salto de layout; o aspect-ratio garante o
    enquadramento mesmo se alguém trocar a foto por uma de proporção diferente. */
-.polaroid img, .strip img, .frame img, .card__media img, .gallery__item img {
+.frame img, .card__media img, .gallery__item img {
   width: 100%;
   height: auto;
   object-fit: cover;
   border-radius: 3px;
 }
-.polaroid img { aspect-ratio: 4 / 3; }
-.strip img { aspect-ratio: 4 / 3.2; }
 .frame img { aspect-ratio: 4 / 5; }
 .gallery__item img { aspect-ratio: 4 / 3; }
 .gallery__item--tall img { aspect-ratio: 3 / 4; }
@@ -584,7 +546,6 @@ ul, ol { list-style: none; padding: 0; }
   padding: .4rem .8rem; border-radius: var(--radius-pill);
 }
 .card__media { background: var(--teal-50); }
-.card__media .ph,
 .card__media img { aspect-ratio: 4 / 5; border-radius: 0; }
 .card__body { padding: 1.6rem 1.5rem 1.7rem; display: flex; flex-direction: column; flex: 1; gap: .9rem; }
 .card__body h3 {
@@ -681,8 +642,6 @@ ul, ol { list-style: none; padding: 0; }
 .gallery__item:nth-child(odd)  { rotate: -1.6deg; }
 .gallery__item:nth-child(even) { rotate: 1.4deg; }
 .gallery__item:hover { rotate: 0deg; transform: translateY(-6px); }
-.gallery__item .ph { aspect-ratio: 4 / 3; }
-.gallery__item--tall .ph { aspect-ratio: 3 / 4; }
 
 .gallery__cta { text-align: center; margin-top: 1.4rem; color: var(--ink-soft); }
 .gallery__cta a {
@@ -834,8 +793,24 @@ ul, ol { list-style: none; padding: 0; }
    RESPONSIVO
    ========================================================= */
 @media (max-width: 1024px) {
-  .hero__inner { grid-template-columns: 1fr; gap: 3rem; }
-  .hero__media { max-width: 520px; }
+  .hero { min-height: 0; }
+
+  /* A foto nao ocupa a altura toda do topo. Esticada por ~900px, so o terco
+     de cima dela aparecia — palmeiras, nao os noivos. Limitando a faixa, a
+     imagem inteira cabe nela e o degrade dissolve o resto no verde. */
+  .hero__foto { height: 54%; }
+  .hero__foto img { object-position: 50% 46%; }
+
+  /* aqui o degradê é vertical: a foto fica no topo e some no verde antes do
+     texto começar, senão o rosto dos noivos briga com o título */
+  .hero__scrim {
+    background: linear-gradient(to bottom,
+      rgba(20, 49, 44, .28) 0%,
+      rgba(32, 74, 67, .78) 34%,
+      var(--surface-3) 60%,
+      var(--surface-3) 100%);
+  }
+  .hero__inner { padding-top: 10rem; padding-bottom: 3.5rem; }
   .hero__stats { grid-template-columns: repeat(2, 1fr); gap: 1.4rem; }
   .about { grid-template-columns: 1fr; }
   .about__media { max-width: 460px; }
@@ -871,36 +846,12 @@ ul, ol { list-style: none; padding: 0; }
   .nav.is-open { background: rgba(251,245,233,.96); backdrop-filter: blur(12px); }
   .nav.is-open .brand__mark--clara  { opacity: 0; }
   .nav.is-open .brand__mark--escura { opacity: 1; }
-  .nav__toggle { display: flex; }
-}
+  .nav__toggle { display: flex; }}
 
 @media (max-width: 640px) {
   .eyebrow { letter-spacing: .13em; }
   .rays--hero { width: 110px; top: 8%; right: 2%; }
 
-  /* No desktop a tirinha fica em pe na coluna da direita. No celular ela
-     ficaria 2,5x mais alta que as duas polaroids empilhadas, esticando as
-     linhas do grid e deixando um vazio entre elas. Aqui ela deita: as duas
-     polaroids ocupam a primeira linha e a tirinha atravessa a segunda. */
-  .hero__media {
-    grid-template-columns: 1fr 1fr;
-    grid-template-rows: auto auto;
-    gap: .7rem;
-    align-items: start;
-  }
-  .polaroid--a { grid-column: 1; grid-row: 1; transform: rotate(-2.5deg); }
-  .polaroid--b { grid-column: 2; grid-row: 1; transform: rotate(2deg); }
-  .strip {
-    grid-column: 1 / -1; grid-row: 2;
-    grid-auto-flow: column;
-    grid-auto-columns: 1fr;
-    align-self: auto;
-    transform: rotate(-1.5deg);
-    margin-top: .3rem;
-  }
-  .polaroid--a:hover { transform: rotate(-2.5deg); }
-  .polaroid--b:hover { transform: rotate(2deg); }
-  .strip:hover { transform: rotate(-1.5deg); }
   .hero__stats { padding-top: 1.5rem; margin-top: 2.2rem; }
   .badge-ring { width: 100px; height: 100px; right: -10px; bottom: -18px; }
   .footer__inner { grid-template-columns: 1fr; }

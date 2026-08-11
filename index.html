@@ -21,6 +21,8 @@
 <link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
 <link rel="apple-touch-icon" href="assets/apple-touch-icon.png" />
 
+<link rel="preload" as="image" href="assets/hero-bg-mobile.jpg" media="(max-width: 700px)" />
+<link rel="preload" as="image" href="assets/hero-bg-1400.jpg" media="(min-width: 701px)" imagesrcset="assets/hero-bg-900.jpg 900w, assets/hero-bg-1400.jpg 1400w, assets/hero-bg.jpg 1800w" imagesizes="100vw" />
 <link rel="preload" as="font" type="font/woff2" href="assets/fonts/poppins-800-latin.woff2" crossorigin />
 <link rel="preload" as="font" type="font/woff2" href="assets/fonts/inter-300-latin.woff2" crossorigin />
 <link rel="preload" as="font" type="font/woff2" href="assets/fonts/sacramento-400-latin.woff2" crossorigin />
@@ -137,16 +139,28 @@
 
 <!-- ============ HERO ============ -->
 <section class="hero" id="top">
-  <div class="hero__bg" aria-hidden="true">
-    <span class="blob blob--1"></span>
-    <span class="blob blob--2"></span>
-    <svg class="rays rays--hero" viewBox="0 0 120 120" aria-hidden="true">
-      <g stroke="currentColor" stroke-width="4" stroke-linecap="round">
-        <path d="M60 8v22"/><path d="M92 18L80 37"/><path d="M112 46L90 52"/>
-        <path d="M28 18l12 19"/><path d="M8 46l22 6"/>
-      </g>
-    </svg>
+  <!-- Foto de fundo como <img> (nao background-image): assim ela entra no
+       pre-carregamento do navegador, aceita srcset e vira a maior pintura
+       de conteudo. alt vazio porque a mesma foto aparece descrita em
+       "Quem somos" e na galeria. -->
+  <div class="hero__foto">
+    <picture>
+      <!-- No celular o recorte 16:9 cortaria numa palmeira: o casal fica fora do
+           enquadramento vertical. Este arquivo tem composicao propria pra retrato. -->
+      <source media="(max-width: 700px)" srcset="assets/hero-bg-mobile.jpg" width="860" height="860" />
+      <img src="assets/hero-bg.jpg"
+           srcset="assets/hero-bg-900.jpg 900w, assets/hero-bg-1400.jpg 1400w, assets/hero-bg.jpg 1800w"
+           sizes="100vw" width="1800" height="1012"
+           fetchpriority="high" decoding="async" alt="" />
+    </picture>
   </div>
+  <div class="hero__scrim" aria-hidden="true"></div>
+  <svg class="rays rays--hero" viewBox="0 0 120 120" aria-hidden="true">
+    <g stroke="currentColor" stroke-width="4" stroke-linecap="round">
+      <path d="M60 8v22"/><path d="M92 18L80 37"/><path d="M112 46L90 52"/>
+      <path d="M28 18l12 19"/><path d="M8 46l22 6"/>
+    </g>
+  </svg>
 
   <div class="hero__inner container">
     <div class="hero__copy">
@@ -184,22 +198,6 @@
         <li><strong data-count="100" data-suffix="%">100%</strong><span>dos casais recomendam</span></li>
         <li><strong class="stars">5,0 ★</strong><span>no Casamentos.com.br</span></li>
       </ul>
-    </div>
-
-    <div class="hero__media" aria-hidden="false">
-      <figure class="polaroid polaroid--a">
-        <img src="assets/kombi-01.jpg" width="900" height="675" fetchpriority="high" alt="Noivos posando ao lado da Kombi retrô da La Kombine em um casamento ao ar livre" />
-      </figure>
-
-      <figure class="strip">
-        <img src="assets/tirinha-01.jpg" width="560" height="448" fetchpriority="high" alt="Pai e filha abraçados posando na cabine fotográfica da festa" />
-        <img src="assets/tirinha-02.jpg" width="560" height="448" fetchpriority="high" alt="Casal de convidados rindo com óculos de coração na cabine fotográfica" />
-        <img src="assets/tirinha-03.jpg" width="560" height="448" fetchpriority="high" alt="Casal posando para o totem fotográfico em frente ao painel de folhagem" />
-      </figure>
-
-      <figure class="polaroid polaroid--b">
-        <img src="assets/totem-01.jpg" width="1000" height="750" fetchpriority="high" alt="Os dois totens fotográficos da La Kombine lado a lado: o Totem Retrô, em madeira e formato de câmera antiga, e o Totem Moderno, branco com ring light" />
-      </figure>
     </div>
   </div>
 
