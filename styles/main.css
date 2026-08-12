@@ -186,6 +186,11 @@ ul, ol { list-style: none; padding: 0; }
 .btn:hover { transform: translateY(-2px); box-shadow: var(--shadow); }
 .btn:active { transform: translateY(0); }
 
+.nav .btn--solid { --btn-bg: var(--cream); color: var(--teal-700); transition: background .25s ease, color .25s ease}
+.nav.is-stuck .btn--solid { --btn-bg: var(--teal-700); color: var(--white) !important };
+
+.nav.is-open .btn--solid { --btn-bg: var(--teal-700) !important; color: var(--teal-700); transition: background .25s ease, color .25s ease}
+
 .btn--solid  { --btn-bg: var(--teal-700); --btn-fg: var(--white); }
 .btn--solid:hover { --btn-bg: var(--teal-800); }
 
@@ -282,7 +287,7 @@ ul, ol { list-style: none; padding: 0; }
 .nav.is-stuck .nav__links a.is-active:not(.nav__cta) {
   color: var(--teal-700); text-shadow: none;
 }
-.nav__cta { color: var(--white) !important; }
+.nav__cta { color: var(--white) ; }
 
 .nav__toggle {
   display: none;
@@ -299,7 +304,8 @@ ul, ol { list-style: none; padding: 0; }
 .nav.is-open .nav__toggle span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
 .nav.is-open .nav__toggle span:nth-child(2) { opacity: 0; }
 .nav.is-open .nav__toggle span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
-
+.nav.is-open .nav__cta { color: var(--white) !important}
+.nav.is-open .nav__cta { background-color: var(--teal-700) !important}
 /* =========================================================
    HERO
    ========================================================= */
@@ -340,9 +346,9 @@ ul, ol { list-style: none; padding: 0; }
 .hero__foto { position: absolute; inset: 0; z-index: -3; }
 .hero__foto picture { display: contents; }
 .hero__foto img {
-  width: 100%; height: 100%;
+  width: 140%; height: 140%;
   object-fit: cover;
-  object-position: 50% 50%;
+  object-position: 60% 0%;
 }
 
 /* Dois degradês sobrepostos. O horizontal deixa a esquerda opaca, onde fica
@@ -857,7 +863,7 @@ ul, ol { list-style: none; padding: 0; }
      de cima dela aparecia — palmeiras, nao os noivos. Limitando a faixa, a
      imagem inteira cabe nela e o degrade dissolve o resto no verde. */
   .hero__foto { height: 60%; }
-  .hero__foto img { object-position: 50% 50%; }
+  .hero__foto img { object-position: 43% 50%; }
 
   /* aqui o degradê é vertical: a foto fica no topo e some no verde antes do
      texto começar, senão o rosto dos noivos briga com o título */
