@@ -874,7 +874,22 @@ ul, ol { list-style: none; padding: 0; }
       var(--surface-3) 60%,
       var(--surface-3) 100%);
   }
-  .hero__inner { padding-top: clamp(5rem, 11vh, 9rem); padding-bottom: clamp(1.25rem, 2.5vh, 3rem); }
+  /* No celular a foto ocupa a faixa de cima, entao o texto desce e encosta
+     na fita: `end` empurra o bloco para o fim do hero em vez de centralizar.
+     `safe` e o par de seguranca — se em alguma tela baixa o conteudo ficar
+     mais alto que a caixa, o alinhamento cai para `start` e o topo do texto
+     continua acessivel, em vez de transbordar por cima da nav. */
+  /* O padding-top era o que empurrava o texto para baixo da foto. Com o
+     alinhamento no fim ele nao faz mais nada em tela folgada (medido: a
+     distancia da nav ao texto nao muda de 9rem para 1rem no iPhone 14,
+     Pixel 7, XR, S8 e iPad mini) e so sobrava altura em tela curta,
+     estourando a dobra. 1rem zera o estouro no SE (667px), no Android de
+     740px e em 1024x700. */
+  .hero__inner {
+    align-content: safe end;
+    padding-top: 1rem;
+    padding-bottom: clamp(1.25rem, 2.5vh, 3rem);
+  }
   /* entrelinha e espacamentos mais justos: sem isso o topo nao cabe em
      tela de 844px, que e a altura do iPhone 14/15 */
   .hero__lead { line-height: 1.5; }
@@ -921,7 +936,9 @@ ul, ol { list-style: none; padding: 0; }
    O chapeu quebrava em 3 linhas a 360px; com menos espacamento cabe em 2. */
 @media (max-width: 400px) {
   .hero .eyebrow--light { letter-spacing: .09em; font-size: .7rem; }
-  .hero__inner { padding-top: clamp(4.25rem, 9vh, 8rem); }
+  /* mesmo motivo do bloco de 1024px: com o alinhamento no fim, esse recuo
+     so servia para estourar a dobra em tela estreita e curta */
+  .hero__inner { padding-top: 1rem; }
   .hero__lead { font-size: .93rem; line-height: 1.45; }
   .hero__stats { gap: .7rem 1.1rem; }
   .hero__stats span { font-size: .7rem; }
