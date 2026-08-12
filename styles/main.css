@@ -321,6 +321,22 @@ ul, ol { list-style: none; padding: 0; }
 }
 
 /* --- foto sangrando --- */
+/* ======================= AJUSTE: ENQUADRAMENTO DO CASAL (DESKTOP) ==========
+   Mexa em `object-position` abaixo. Sao dois numeros: HORIZONTAL VERTICAL.
+
+     object-position: 50% 50%;
+                       |    |
+                       |    +-- 0% = mostra o topo da foto
+                       |        100% = mostra o pe da foto
+                       +------- 0% = puxa a foto para a DIREITA
+                                100% = puxa a foto para a ESQUERDA
+
+   Parece invertido, mas e assim mesmo: o numero diz qual parte da foto fica
+   alinhada ao centro. Aumentar leva o casal para a esquerda (mais escondido
+   atras do texto); diminuir leva o casal para a direita.
+   Mexa de 5 em 5% e va olhando. O equivalente no celular esta la embaixo,
+   dentro de @media (max-width: 1024px).
+   =========================================================================== */
 .hero__foto { position: absolute; inset: 0; z-index: -3; }
 .hero__foto picture { display: contents; }
 .hero__foto img {
@@ -826,6 +842,17 @@ ul, ol { list-style: none; padding: 0; }
 @media (max-width: 1024px) {
   .hero { min-height: 100svh; }
 
+  /* ===================== AJUSTE: ENQUADRAMENTO DO CASAL (CELULAR) ==========
+     `height` = quanto da altura da tela a foto ocupa antes de virar verde.
+        Maior (ex.: 70%) = foto maior, texto comeca mais embaixo.
+        Menor (ex.: 50%) = foto menor, mais espaco verde para o texto.
+     `object-position` funciona igual ao do desktop (ver comentario la em cima),
+     mas no celular quem importa mais e o SEGUNDO numero, o vertical:
+        menor (ex.: 35%) = mostra mais o topo da foto
+        maior (ex.: 65%) = mostra mais o pe da foto
+     No celular a foto usa outro arquivo (assets/hero-bg-mobile.jpg, quadrado),
+     entao o resultado nao e igual ao do desktop — confira nos dois.
+     ======================================================================== */
   /* A foto nao ocupa a altura toda do topo. Esticada por ~900px, so o terco
      de cima dela aparecia — palmeiras, nao os noivos. Limitando a faixa, a
      imagem inteira cabe nela e o degrade dissolve o resto no verde. */
