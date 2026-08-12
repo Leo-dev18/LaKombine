@@ -352,8 +352,10 @@ ul, ol { list-style: none; padding: 0; }
    Parece invertido, mas e assim mesmo: o numero diz qual parte da foto fica
    alinhada ao centro. Aumentar leva o casal para a esquerda (mais escondido
    atras do texto); diminuir leva o casal para a direita.
-   Mexa de 5 em 5% e va olhando. O equivalente no celular esta la embaixo,
-   dentro de @media (max-width: 1024px).
+   Mexa de 5 em 5% e va olhando. Sao tres faixas, cada uma com o seu valor:
+   esta aqui vale do desktop para cima, o tablet fica em
+   @media (min-width: 701px) and (max-width: 1024px) e o celular em
+   @media (max-width: 700px).
    =========================================================================== */
 .hero__foto { position: absolute; inset: 0; z-index: -3; }
 .hero__foto picture { display: contents; }
@@ -851,6 +853,55 @@ ul, ol { list-style: none; padding: 0; }
 @media (max-width: 1024px) {
   .hero { min-height: 100svh; }
 
+  .hero__stats { grid-template-columns: repeat(2, 1fr); gap: 1.4rem; }
+  .about { grid-template-columns: 1fr; }
+  .about__media { max-width: 460px; }
+  .faq { grid-template-columns: 1fr; }
+  .faq .section__head { position: static; }
+  .footer__inner { grid-template-columns: 1fr 1fr; gap: 2rem; }
+}
+
+/* =========================================================
+   TABLETS (701px a 1024px) — iPad mini ate iPad Pro
+   Aqui o <picture> ainda entrega a foto larga (hero-bg.jpg, 16:9),
+   nao a quadrada do celular. Por isso o tablet herda o tratamento do
+   desktop (foto sangrando + degrade horizontal + texto centralizado)
+   e so ajusta o que a tela estreita exige.
+   ========================================================= */
+@media (min-width: 701px) and (max-width: 1024px) {
+  /* O 140% do desktop jogava a imagem para fora da caixa e cortava o noivo
+     na borda direita. Em tablet ela volta a caber inteira.
+     ===================== AJUSTE: ENQUADRAMENTO DO CASAL (TABLET) ==========
+     70% deixa a noiva por volta de 47% da tela e o noivo por volta de 86%,
+     ou seja, o casal inteiro a direita da coluna de texto. Diminuir empurra
+     o casal ainda mais para a direita e corta o noivo; aumentar traz o casal
+     para tras do texto. Medido em iPad mini, Air, Pro 11 e Pro 12,9.
+     ======================================================================= */
+  .hero__foto img {
+    width: 100%; height: 100%;
+    object-position: 70% 50%;
+  }
+
+  /* 22rem em vez dos 30rem do desktop. Nao e estetica: em 768px de largura
+     a coluna larga esticava o texto para dentro da parte clara da foto e o
+     paragrafo caia para 4,2:1. A 22rem tudo fica sobre a faixa opaca do
+     degrade — medido 5,04:1 no mini, 5,23 no Air, 5,25 no Pro 11 e 7,96 no
+     Pro 12,9, sem precisar escurecer a foto. */
+  .hero__copy, .hero__lead, .hero__stats { max-width: 22rem; }
+
+  /* Uma coluna: em duas, dentro de 22rem, "no casamentos.com.br" e "dos
+     casais recomendam" quebravam em duas linhas. Em tablet sobra altura. */
+  .hero__stats { grid-template-columns: 1fr; gap: 1.1rem; }
+
+  /* o texto centralizado vem da regra base do .hero__inner — o tablet nao
+     recebe mais o `align-content: safe end`, que agora e so de celular */
+}
+
+/* =========================================================
+   CELULARES (ate 700px) — o mesmo ponto em que o <picture>
+   troca para assets/hero-bg-mobile.jpg, a versao quadrada.
+   ========================================================= */
+@media (max-width: 700px) {
   /* ===================== AJUSTE: ENQUADRAMENTO DO CASAL (CELULAR) ==========
      `height` = quanto da altura da tela a foto ocupa antes de virar verde.
         Maior (ex.: 70%) = foto maior, texto comeca mais embaixo.
@@ -859,8 +910,8 @@ ul, ol { list-style: none; padding: 0; }
      mas no celular quem importa mais e o SEGUNDO numero, o vertical:
         menor (ex.: 35%) = mostra mais o topo da foto
         maior (ex.: 65%) = mostra mais o pe da foto
-     No celular a foto usa outro arquivo (assets/hero-bg-mobile.jpg, quadrado),
-     entao o resultado nao e igual ao do desktop — confira nos dois.
+     Vale so para hero-bg-mobile.jpg, a versao quadrada — o tablet e o
+     desktop usam outro arquivo e tem os proprios valores.
      ======================================================================== */
   /* A foto nao ocupa a altura toda do topo. Esticada por ~900px, so o terco
      de cima dela aparecia — palmeiras, nao os noivos. Limitando a faixa, a
@@ -881,13 +932,10 @@ ul, ol { list-style: none; padding: 0; }
      na fita: `end` empurra o bloco para o fim do hero em vez de centralizar.
      `safe` e o par de seguranca — se em alguma tela baixa o conteudo ficar
      mais alto que a caixa, o alinhamento cai para `start` e o topo do texto
-     continua acessivel, em vez de transbordar por cima da nav. */
-  /* O padding-top era o que empurrava o texto para baixo da foto. Com o
-     alinhamento no fim ele nao faz mais nada em tela folgada (medido: a
-     distancia da nav ao texto nao muda de 9rem para 1rem no iPhone 14,
-     Pixel 7, XR, S8 e iPad mini) e so sobrava altura em tela curta,
-     estourando a dobra. 1rem zera o estouro no SE (667px), no Android de
-     740px e em 1024x700. */
+     continua acessivel, em vez de transbordar por cima da nav.
+     O padding-top de 1rem zera o estouro da dobra no SE (667px) e no
+     Android de 740px; com o alinhamento no fim ele nao muda nada em tela
+     folgada. */
   .hero__inner {
     align-content: safe end;
     padding-top: 1rem;
@@ -897,12 +945,6 @@ ul, ol { list-style: none; padding: 0; }
      tela de 844px, que e a altura do iPhone 14/15 */
   .hero__lead { line-height: 1.5; }
   .eyebrow--light { margin-bottom: .6rem; }
-  .hero__stats { grid-template-columns: repeat(2, 1fr); gap: 1.4rem; }
-  .about { grid-template-columns: 1fr; }
-  .about__media { max-width: 460px; }
-  .faq { grid-template-columns: 1fr; }
-  .faq .section__head { position: static; }
-  .footer__inner { grid-template-columns: 1fr 1fr; gap: 2rem; }
 }
 
 @media (max-width: 860px) {
