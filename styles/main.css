@@ -311,7 +311,7 @@ ul, ol { list-style: none; padding: 0; }
   /* svh, nao vh: no celular o vh conta a barra do navegador que some ao
      rolar, e o topo estouraria a tela. Os 92% deixam uma fatia da proxima
      secao aparecendo, sinalizando que ha mais conteudo abaixo. */
-  min-height: 92svh;
+  min-height: 100svh;
   padding-top: var(--nav-h);
   padding-bottom: 0;
   background: var(--surface-3);
@@ -326,7 +326,7 @@ ul, ol { list-style: none; padding: 0; }
 .hero__foto img {
   width: 100%; height: 100%;
   object-fit: cover;
-  object-position: 10% 44%;
+  object-position: 50% 50%;
 }
 
 /* Dois degradês sobrepostos. O horizontal deixa a esquerda opaca, onde fica
@@ -363,6 +363,11 @@ ul, ol { list-style: none; padding: 0; }
 .hero__inner {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
+  /* ocupa a altura que sobra e centraliza o texto nela, deixando o marquee
+     encostado no fim do topo. Sem isto o `justify-content: center` do .hero
+     centraliza o conjunto e sobra foto embaixo da fita. */
+  flex: 1;
+  align-content: center;
   padding-block: clamp(1rem, 3vh, 2.25rem) clamp(1.25rem, 4vh, 3rem);
 }
 /* Coluna mais estreita que antes (era 46rem): o titulo agora quebra em
@@ -438,9 +443,16 @@ ul, ol { list-style: none; padding: 0; }
   overflow: hidden;
 }
 .marquee__track {
-  display: flex; align-items: center; gap: 1.6rem;
+  display: flex; align-items: center;
   width: max-content;
-  animation: scroll-x 38s linear infinite;
+  animation: scroll-x 46s linear infinite;
+}
+/* O espacamento vive DENTRO do grupo (incluindo o da direita), entao todos
+   tem largura identica e o -25% cai exatamente na emenda. Com o gap no
+   track, como era antes, o -50% errava por 13px e a fita saltava a cada volta. */
+.marquee__grupo {
+  display: flex; align-items: center; gap: 1.6rem;
+  padding-right: 1.6rem;
 }
 .marquee__track span {
   font-family: var(--font-display); font-weight: 600; font-size: .82rem;
@@ -448,7 +460,7 @@ ul, ol { list-style: none; padding: 0; }
   color: var(--white); white-space: nowrap;
 }
 .marquee__track .sep { color: var(--amber); letter-spacing: 0; }
-@keyframes scroll-x { to { transform: translateX(-50%); } }
+@keyframes scroll-x { to { transform: translateX(-25%); } }
 
 /* =========================================================
    SEÇÕES GENÉRICAS
@@ -812,13 +824,13 @@ ul, ol { list-style: none; padding: 0; }
    RESPONSIVO
    ========================================================= */
 @media (max-width: 1024px) {
-  .hero { min-height: 0; }
+  .hero { min-height: 100svh; }
 
   /* A foto nao ocupa a altura toda do topo. Esticada por ~900px, so o terco
      de cima dela aparecia — palmeiras, nao os noivos. Limitando a faixa, a
      imagem inteira cabe nela e o degrade dissolve o resto no verde. */
   .hero__foto { height: 60%; }
-  .hero__foto img { object-position: 50% 46%; }
+  .hero__foto img { object-position: 50% 50%; }
 
   /* aqui o degradê é vertical: a foto fica no topo e some no verde antes do
      texto começar, senão o rosto dos noivos briga com o título */
