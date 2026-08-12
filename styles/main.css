@@ -362,7 +362,7 @@ ul, ol { list-style: none; padding: 0; }
 .hero__foto img {
   width: 140%; height: 140%;
   object-fit: cover;
-  object-position: 60% 0%;
+  object-position: 58% 0%;
 }
 
 /* Dois degradês sobrepostos. O horizontal deixa a esquerda opaca, onde fica
@@ -374,18 +374,17 @@ ul, ol { list-style: none; padding: 0; }
 .hero__scrim {
   position: absolute; inset: 0; z-index: -2;
   background:
-    linear-gradient(96deg,
+    linear-gradient(79deg,
       var(--surface-3) 0%,
-      rgba(28, 66, 60, .98) 26%,
-      rgba(32, 74, 67, .92) 38%,
-      rgba(40, 90, 82, .55) 52%,
-      rgba(49, 106, 96, .20) 68%,
-      rgba(49, 106, 96, .06) 86%),
+      rgba(28, 66, 60, .98) 0%,
+      rgba(28, 66, 60, .98) 33%,
+      rgba(32, 74, 67, .0) 70%,
+      rgba(40, 90, 82, .0) 100%),
     linear-gradient(to bottom,
-      rgba(20, 49, 44, .72) 0%,
+      rgba(20, 49, 44, .30) 2%,
       rgba(20, 49, 44, 0) 22%,
-      rgba(20, 49, 44, 0) 62%,
-      rgba(27, 64, 58, .88) 100%);
+
+      rgba(27, 64, 58, .0) 100%);
 }
 .hero::after { /* grão de filme */
   content: ''; position: absolute; inset: 0; z-index: -1; pointer-events: none;
@@ -923,8 +922,10 @@ ul, ol { list-style: none; padding: 0; }
      texto começar, senão o rosto dos noivos briga com o título */
   .hero__scrim {
     background: linear-gradient(to bottom,
-      rgba(20, 49, 44, .28) 0%,
-      rgba(32, 74, 67, .78) 34%,
+      rgba(20, 49, 44, .40) 1%,
+      rgba(20, 49, 44, .0) 20%,
+      rgba(20, 49, 44, .0) 30%,
+      rgba(32, 74, 67, .78) 45%,
       var(--surface-3) 60%,
       var(--surface-3) 100%);
   }
