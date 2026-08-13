@@ -162,6 +162,65 @@
     gallery.addEventListener('click', function (e) {
       if (moved > 6) { e.preventDefault(); e.stopPropagation(); }
     }, true);
+
+    /* ---------- Galeria: setas e foto em foco ---------- */
+    var itens = [].slice.call(gallery.querySelectorAll('.gallery__item'));
+    var btnPrev = document.querySelector('.gallery__nav--prev');
+    var btnNext = document.querySelector('.gallery__nav--next');
+
+    // índice do item cujo centro está mais perto do centro visível
+    function indiceEmFoco() {
+      var centro = gallery.scrollLeft + gallery.clientWidth / 2;
+      var melhor = 0, menorDist = Infinity;
+      for (var i = 0; i < itens.length; i++) {
+        var it = itens[i];
+        var meio = it.offsetLeft + it.offsetWidth / 2;
+        var dist = Math.abs(meio - centro);
+        if (dist < menorDist) { menorDist = dist; melhor = i; }
+      }
+      return melhor;
+    }
+
+    var focoAtual = -1;
+    function atualiza() {
+      var i = indiceEmFoco();
+      if (i !== focoAtual) {
+        if (itens[focoAtual]) itens[focoAtual].classList.remove('is-focus');
+        itens[i].classList.add('is-focus');
+        focoAtual = i;
+      }
+      if (btnPrev && btnNext) {
+        // Pelo indice em foco, nao pela posicao da rolagem: os espacadores
+        // sobram depois da ultima foto centralizada, entao em tela larga
+        // ainda havia rolagem disponivel com a ultima ja em foco e a seta
+        // continuava acesa sem ter para onde ir.
+        btnPrev.disabled = i <= 0;
+        btnNext.disabled = i >= itens.length - 1;
+      }
+    }
+
+    var agendado = false;
+    gallery.addEventListener('scroll', function () {
+      if (agendado) return;
+      agendado = true;
+      requestAnimationFrame(function () { agendado = false; atualiza(); });
+    });
+
+    function vaiPara(i) {
+      var alvo = itens[Math.max(0, Math.min(itens.length - 1, i))];
+      if (!alvo) return;
+      // centraliza o item pedido; o scroll-snap ajusta o resto
+      var destino = alvo.offsetLeft + alvo.offsetWidth / 2 - gallery.clientWidth / 2;
+      gallery.scrollTo({ left: destino, behavior: reduceMotion ? 'auto' : 'smooth' });
+    }
+
+    if (btnPrev) btnPrev.addEventListener('click', function () { vaiPara(indiceEmFoco() - 1); });
+    if (btnNext) btnNext.addEventListener('click', function () { vaiPara(indiceEmFoco() + 1); });
+
+    atualiza();
+    // as fotos são lazy: quando carregam, as larguras mudam e o foco muda junto
+    window.addEventListener('resize', atualiza);
+    window.addEventListener('load', atualiza);
   }
 
   /* ---------- Link ativo conforme a seção visível ---------- */

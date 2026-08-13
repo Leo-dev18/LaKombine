@@ -240,6 +240,24 @@ ul, ol { list-style: none; padding: 0; }
   transition: background-color .3s var(--ease), box-shadow .3s var(--ease),
               backdrop-filter .3s var(--ease);
 }
+/* Veu curto atras da nav, so na faixa de 74px.
+   Com o degrade do topo mais claro, os links brancos ficaram entre 2,96:1
+   e 3,19:1 sobre a foto — abaixo do minimo legivel. Escurecer o hero
+   inteiro resolveria, mas devolveria a foto ao estado escuro; este veu
+   sobe o pior link para 5,07:1 sem tocar na area onde o casal aparece.
+   Some quando a nav gruda, porque ai o fundo ja e creme. */
+.nav::before {
+  content: '';
+  position: absolute; inset: 0; z-index: -1;
+  pointer-events: none;
+  background: linear-gradient(to bottom,
+    rgba(20, 49, 44, .62),
+    rgba(20, 49, 44, .30) 60%,
+    rgba(20, 49, 44, 0));
+  transition: opacity .3s var(--ease);
+}
+.nav.is-stuck::before, .nav.is-open::before { opacity: 0; }
+
 .nav__inner {
   width: min(100% - 2.5rem, var(--container));
   margin-inline: auto;
@@ -671,7 +689,7 @@ ul, ol { list-style: none; padding: 0; }
   align-items: center;
   gap: 1rem;
   overflow-x: auto;
-  padding: .5rem clamp(1.25rem, 4vw, 4rem) 1.5rem;
+  padding: .5rem 0 1.5rem;
   scroll-snap-type: x mandatory;
   -webkit-overflow-scrolling: touch;
   cursor: grab;
@@ -683,6 +701,18 @@ ul, ol { list-style: none; padding: 0; }
 .gallery::-webkit-scrollbar { display: none; }
 .gallery.is-dragging { cursor: grabbing; scroll-snap-type: none; }
 
+/* Espacadores nas duas pontas. Sem eles a rolagem acaba antes de a ultima
+   foto chegar ao centro, e as duas ultimas nunca entravam em foco: no fim
+   do carrossel o centro parava na quinta. 12rem e metade da moldura mais
+   larga, entao a primeira ja nasce centralizada. Em tela estreita o max()
+   o piso de 1,25rem preserva a respiracao lateral que o padding dava. */
+.gallery::before,
+.gallery::after {
+  content: '';
+  flex: 0 0 auto;
+  width: max(1.25rem, calc(50% - 12rem));
+}
+
 .gallery__item {
   flex: 0 0 auto;
   width: clamp(210px, 24vw, 290px);
@@ -693,14 +723,55 @@ ul, ol { list-style: none; padding: 0; }
   padding: .6rem;
   border-radius: 4px;
   box-shadow: var(--shadow);
-  transition: transform .35s var(--ease);
+  /* estado de repouso: apagada. A que esta centralizada recebe .is-focus
+     do JS e volta ao normal. */
+  opacity: .42;
+  filter: saturate(.55);
+  transition: transform .35s var(--ease), opacity .35s var(--ease),
+              filter .35s var(--ease), rotate .35s var(--ease);
 }
 /* as deitadas ficam mais largas: com a mesma largura das em pe, elas
    apareciam bem menores e o carrossel ficava desequilibrado */
 .gallery__item:not(.gallery__item--tall) { width: clamp(270px, 31vw, 385px); }
 .gallery__item:nth-child(odd)  { rotate: -1.6deg; }
 .gallery__item:nth-child(even) { rotate: 1.4deg; }
+
+/* --- setas de navegacao --- */
+/* O wrap so existe para ancorar as setas: a .gallery precisa continuar
+   sendo o elemento que rola, entao os botoes nao podem morar dentro dela. */
+.gallery__wrap { position: relative; }
+
+.gallery__nav {
+  position: absolute; top: 50%; z-index: 3;
+  translate: 0 -50%;
+  width: 46px; height: 46px;
+  display: grid; place-items: center;
+  border-radius: 50%;
+  background: var(--white);
+  color: var(--teal-800);
+  box-shadow: var(--shadow);
+  transition: background .25s var(--ease), color .25s var(--ease),
+              opacity .25s var(--ease), transform .25s var(--ease);
+}
+.gallery__nav:hover { background: var(--teal-700); color: var(--white); transform: scale(1.06); }
+.gallery__nav--prev { left: clamp(.4rem, 1.5vw, 1.4rem); }
+.gallery__nav--next { right: clamp(.4rem, 1.5vw, 1.4rem); }
+/* nas pontas o botao apaga em vez de sumir: some do fluxo de clique mas
+   nao "pula" o layout nem tira a referencia visual */
+.gallery__nav[disabled] { opacity: 0; pointer-events: none; }
+
+/* --- foto em foco --- */
+.gallery__item.is-focus,
+.gallery__item:hover {
+  opacity: 1;
+  filter: none;
+}
 .gallery__item:hover { rotate: 0deg; transform: translateY(-6px); }
+.gallery__item.is-focus { rotate: 0deg; transform: scale(1.03); }
+.gallery__item.is-focus:hover { transform: scale(1.03) translateY(-6px); }
+/* Sem JS (ou antes de ele rodar) ninguem tem .is-focus: sem esta regra a
+   galeria inteira ficaria apagada de forma permanente. */
+.gallery:not(:has(.is-focus)) .gallery__item { opacity: 1; filter: none; }
 
 .gallery__cta { text-align: center; margin-top: 1.4rem; color: var(--ink-soft); }
 .gallery__cta a {
@@ -1004,6 +1075,57 @@ ul, ol { list-style: none; padding: 0; }
 /* =========================================================
    ACESSIBILIDADE — movimento reduzido
    ========================================================= */
+/* =========================================================
+   DESKTOP: encolhe as secoes altas para caberem melhor na tela
+   Mesma tecnica do topo: os clamps ganham um teto em `vh` dentro de
+   min(), entao o espacamento cresce com a largura mas para de crescer
+   quando a tela e baixa. Vale so daqui para cima — no celular e no
+   tablet a rolagem e esperada e os valores originais continuam.
+   ========================================================= */
+@media (min-width: 1025px) {
+  .section--compacta { padding-block: clamp(2.75rem, min(2.5rem + 3vw, 7.5vh), 5rem); }
+  .section--compacta .section__head { margin-bottom: clamp(1.6rem, min(1.5rem + 1.5vw, 4vh), 2.75rem); }
+
+  /* SOBRE — a foto e o que manda na altura da secao */
+  .section--compacta .about { gap: clamp(2rem, 3vw, 4rem); }
+  .section--compacta .frame img {
+    aspect-ratio: auto;
+    height: clamp(300px, 50vh, 520px);
+    width: 100%;
+    object-fit: cover;
+    object-position: 50% 32%;   /* o corte alto mantem os noivos no quadro */
+  }
+  .section--compacta .about__copy p { margin-top: clamp(.65rem, 1.5vh, 1.1rem); }
+  .section--compacta .ticks { gap: clamp(.35rem, .8vh, .6rem) 1.5rem; }
+
+  /* OPCOES — a imagem 4/5 do card sozinha valia quase 480px */
+  .section--compacta .card__media img {
+    aspect-ratio: auto;
+    height: clamp(150px, 22vh, 240px);
+    width: 100%;
+    object-fit: cover;
+  }
+  /* As tres fotos sao verticais e cada assunto esta numa altura diferente.
+     Com o corte deitado, o centro padrao pegava chao e parede: na Kombi
+     cortava o teto, no Totem Retro cortava a cabeca do tripe e no Moderno
+     sobrava so o balao. Cada uma puxa para onde esta o equipamento. */
+  .section--compacta .card__media img[src*="exp-kombi"]         { object-position: 50% 42%; }
+  .section--compacta .card__media img[src*="exp-totem-retro"]   { object-position: 62% 34%; }
+  .section--compacta .card__media img[src*="exp-totem-moderno"] { object-position: 22% 15%; }
+  .section--compacta .card__body {
+    padding: clamp(1.1rem, 2vh, 1.6rem) 1.5rem clamp(1.2rem, 2.2vh, 1.7rem);
+    gap: clamp(.6rem, 1.2vh, .9rem);
+  }
+  .section--compacta .cards { gap: clamp(1.1rem, 1.6vw, 1.6rem); }
+  .section--compacta .cards__note { margin-top: clamp(1.4rem, 2.6vh, 2.5rem); }
+
+  /* GALERIA — teto em vh nas duas larguras de moldura */
+  .section--compacta .gallery__item { width: clamp(180px, min(24vw, 25vh), 290px); }
+  .section--compacta .gallery__item:not(.gallery__item--tall) { width: clamp(230px, min(31vw, 33vh), 385px); }
+  .section--compacta .gallery { padding-block: .5rem 1rem; }
+  .section--compacta .gallery__cta { margin-top: clamp(.8rem, 1.6vh, 1.4rem); }
+}
+
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   *, *::before, *::after {
