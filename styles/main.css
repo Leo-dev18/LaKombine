@@ -66,6 +66,11 @@ html {
   scroll-behavior: smooth;
   scroll-padding-top: calc(var(--nav-h) + 16px);
   -webkit-text-size-adjust: 100%;
+  /* `clip` em vez de `hidden`: corta sem criar um contexto de rolagem,
+     entao o `position: sticky` e as ancoras continuam funcionando. So no
+     body nao bastava — no Safari do iPhone a rolagem lateral escapava
+     mesmo assim, porque quem rola ali e a raiz. */
+  overflow-x: clip;
 }
 
 body {
@@ -560,6 +565,12 @@ ul, ol { list-style: none; padding: 0; }
   border-radius: 50%;
   display: grid; place-items: center;
   box-shadow: var(--shadow);
+  /* A caixa de um elemento em rotacao e o retangulo que envolve o giro:
+     um quadrado de 100px girando mede 141px de canto a canto. Como o selo
+     fica pendurado para fora da moldura, esses cantos passavam da borda
+     da tela e criavam 2px de rolagem horizontal no celular. O recorte
+     circular nao corta nada visivel: o anel e o texto giram dentro. */
+  overflow: hidden;
 }
 .badge-ring svg { width: 100%; height: 100%; animation: spin 26s linear infinite; }
 .badge-ring .ring-outer { fill: none; stroke: rgba(255,255,255,.55); stroke-width: 1.5; }
@@ -1086,32 +1097,13 @@ ul, ol { list-style: none; padding: 0; }
   .section--compacta { padding-block: clamp(2.75rem, min(2.5rem + 3vw, 7.5vh), 5rem); }
   .section--compacta .section__head { margin-bottom: clamp(1.6rem, min(1.5rem + 1.5vw, 4vh), 2.75rem); }
 
-  /* SOBRE — a foto e o que manda na altura da secao */
+  /* SOBRE — so o espacamento encolhe; a foto fica no tamanho original */
   .section--compacta .about { gap: clamp(2rem, 3vw, 4rem); }
-  .section--compacta .frame img {
-    aspect-ratio: auto;
-    height: clamp(300px, 50vh, 520px);
-    width: 100%;
-    object-fit: cover;
-    object-position: 50% 32%;   /* o corte alto mantem os noivos no quadro */
-  }
   .section--compacta .about__copy p { margin-top: clamp(.65rem, 1.5vh, 1.1rem); }
   .section--compacta .ticks { gap: clamp(.35rem, .8vh, .6rem) 1.5rem; }
 
-  /* OPCOES — a imagem 4/5 do card sozinha valia quase 480px */
-  .section--compacta .card__media img {
-    aspect-ratio: auto;
-    height: clamp(150px, 22vh, 240px);
-    width: 100%;
-    object-fit: cover;
-  }
-  /* As tres fotos sao verticais e cada assunto esta numa altura diferente.
-     Com o corte deitado, o centro padrao pegava chao e parede: na Kombi
-     cortava o teto, no Totem Retro cortava a cabeca do tripe e no Moderno
-     sobrava so o balao. Cada uma puxa para onde esta o equipamento. */
-  .section--compacta .card__media img[src*="exp-kombi"]         { object-position: 50% 42%; }
-  .section--compacta .card__media img[src*="exp-totem-retro"]   { object-position: 62% 34%; }
-  .section--compacta .card__media img[src*="exp-totem-moderno"] { object-position: 22% 15%; }
+  /* OPCOES — as fotos dos cards ficam no 4/5 original; encolhe so o
+     espacamento interno e o vao entre os cards */
   .section--compacta .card__body {
     padding: clamp(1.1rem, 2vh, 1.6rem) 1.5rem clamp(1.2rem, 2.2vh, 1.7rem);
     gap: clamp(.6rem, 1.2vh, .9rem);
@@ -1119,9 +1111,7 @@ ul, ol { list-style: none; padding: 0; }
   .section--compacta .cards { gap: clamp(1.1rem, 1.6vw, 1.6rem); }
   .section--compacta .cards__note { margin-top: clamp(1.4rem, 2.6vh, 2.5rem); }
 
-  /* GALERIA — teto em vh nas duas larguras de moldura */
-  .section--compacta .gallery__item { width: clamp(180px, min(24vw, 25vh), 290px); }
-  .section--compacta .gallery__item:not(.gallery__item--tall) { width: clamp(230px, min(31vw, 33vh), 385px); }
+  /* GALERIA — as molduras ficam no tamanho pedido; encolhe so o respiro */
   .section--compacta .gallery { padding-block: .5rem 1rem; }
   .section--compacta .gallery__cta { margin-top: clamp(.8rem, 1.6vh, 1.4rem); }
 }
